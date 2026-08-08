@@ -2,7 +2,6 @@ plugins {
     id 'net.fabricmc.fabric-loom' version '1.17.17'
     id 'java'
     id 'maven-publish'
-    id "com.gradleup.shadow" version "9.2.2" // AppleSkin
 }
 
 version = project.mod_version
@@ -27,8 +26,6 @@ repositories {
     maven { url "https://maven.terraformersmc.com/" }
     maven { url "https://maven.nucleoid.xyz/" }
     maven { url "https://maven.blamejared.com/" }
-    maven { url "https://modmaven.dev" }
-    maven { url "https://cursemaven.com" }
 
     // Modrinth Maven — canonical source for VulkanMod when working online.
     exclusiveContent {
@@ -71,75 +68,37 @@ dependencies {
     }
 
     // Mod Menu API + Lombok for CustomClientBrand
-    implementation files ("libs/modmenu-18.0.0.jar")
+    implementation files("libs/modmenu-18.0.0.jar")
     compileOnly "org.projectlombok:lombok:1.18.42"
     annotationProcessor "org.projectlombok:lombok:1.18.42"
 
-    // AppleSkin
-    implementation (shadow "blue.endless:jankson:1.2.3")
-    compileOnly "curse.maven:configured-457570:7820635"
-}
 
-// AppleSkin
-import net.fabricmc.loom.task.service.JarManifestService
-import net.fabricmc.loom.task.ManifestModificationAction
+    processResources {
+        inputs.property "version", project.mod_version
+        inputs.property "minecraft_version", project.minecraft_version
+        inputs.property "loader_version", project.loader_version
+        inputs.property "fabric_version", project.fabric_version
 
-shadowJar {
-    archiveClassifier = null
-    configurations = [project.configurations.shadow]
-
-    relocate "blue.endless.jankson", "squeek.appleskin.shadowed.blue.endless.jankson"
-
-    from("LICENSE") {
-        rename { "${it}_${project.base.archivesName.get()}"}
+        filesMatching("fabric.mod.json") {
+            expand([
+                    "version"          : project.mod_version,
+                    "minecraft_version": project.minecraft_version,
+                    "loader_version"   : project.loader_version,
+                    "fabric_version"   : project.fabric_version
+            ])
+        }
     }
 
-    // Not really sure it matters, but with the loss of remapJar in 26.1, the Loom-added
-    // MANIFEST properties don't end up in the jar. This is a hacky way of getting them back,
-    // with some hardcoded values for areEnvironmentSourcesSplit and clientOnlyEntries
-    // that are correct for AppleSkin but not correct for all mods.
-    // Taken from Loom's NonRemappedJarTaskConfiguration.
-    final Provider<JarManifestService> manifestServiceProvider = JarManifestService.get(project)
-    doLast(new ManifestModificationAction(manifestServiceProvider, "official", provider{ false }, provider{ [] }))
-    usesService(manifestServiceProvider)
-}
-
-build {
-    dependsOn(tasks.shadowJar)
-}
-
-artifacts {
-    archives shadowJar
-    archives sourcesJar
-}
-
-// End Appleskin
-
-processResources {
-    inputs.property "version",          project.mod_version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version",    project.loader_version
-    inputs.property "fabric_version",    project.fabric_version
-
-    filesMatching("fabric.mod.json") {
-        expand([
-            "version"          : project.mod_version,
-            "minecraft_version": project.minecraft_version,
-            "loader_version"   : project.loader_version,
-            "fabric_version"   : project.fabric_version
-        ])
+    tasks.withType(JavaCompile).configureEach {
+        options.release = 25
+        options.encoding = "UTF-8"
     }
-}
 
-tasks.withType(JavaCompile).configureEach {
-    options.release = 25
-    options.encoding = "UTF-8"
-}
-
-jar {
-    from("LICENSE") {
-        rename {
-            "${it}_${project.archives_base_name}"
+    jar {
+        from("LICENSE") {
+            rename {
+                "${it}_${project.archives_base_name}"
+            }
         }
     }
 }

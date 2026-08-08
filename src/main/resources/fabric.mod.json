@@ -21,16 +21,11 @@
       "com.rootbeerutils.client.shulkerbox.ShulkerBoxPreview",
       "com.rootbeerutils.client.quickpack.QuickPackClient",
       "com.rootbeerutils.client.bbe.BBEClient",
-      "com.rootbeerutils.client.appleskin.AppleSkin",
       "com.rootbeerutils.client.clientcommands.ClientCommands"
     ],
     "main": [
       "com.rootbeerutils.main.healthmod.HealthMod",
-      "com.rootbeerutils.main.customclientbrand.CustomClientBrand",
-      "com.rootbeerutils.main.appleskin.AppleSkinCommon"
-    ],
-    "modmenu": [
-      "com.rootbeerutils.main.appleskin.gui.ModMenuIntegration"
+      "com.rootbeerutils.main.customclientbrand.CustomClientBrand"
     ]
   },
   "mixins": [
@@ -44,12 +39,5 @@
     "fabric-api":   ">=${fabric_version}",
     "minecraft":    "~${minecraft_version}",
     "java":         ">=25"
-  },
-  "custom": {
-    "configured": {
-      "providers": [
-        "com.rootbeerutils.main.appleskin.gui.ConfiguredConfigProvider"
-      ]
-    }
   }
 }
