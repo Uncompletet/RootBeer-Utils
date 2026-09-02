@@ -150,7 +150,7 @@ public class BBEBannerRenderer implements BlockEntityRenderer<BannerBlockEntity,
 
         BlockEntityRenderStateExt stateExt = (BlockEntityRenderStateExt)state;
 
-        boolean managed = OverlayRenderer.manageCrumblingOverlay(stateExt.rootbeer_utils$blockEntity(), poseStack, model, Unit.INSTANCE, lightCoords, OverlayTexture.NO_OVERLAY, 0, breakProgress);
+        boolean managed = OverlayRenderer.manageCrumblingOverlay(stateExt.rootbeer_utils$blockEntity(), collector, poseStack, model, Unit.INSTANCE, lightCoords, OverlayTexture.NO_OVERLAY, 0, breakProgress);
         if (!managed) {
             collector.submitModel(model, Unit.INSTANCE, poseStack, lightCoords, OverlayTexture.NO_OVERLAY, -1, sprite, sprites, 0, breakProgress);
         }
@@ -163,7 +163,7 @@ public class BBEBannerRenderer implements BlockEntityRenderer<BannerBlockEntity,
         // BannerFlagModel extends Model<Float>; the deferred-overlay path runs setupAnim(phase) at
         // submit time, but at *queue* time we don't have the phase yet, so pass null and rely on
         // OverlayRenderer's null-check before the eventual setupAnim call.
-        boolean managed2 = OverlayRenderer.manageCrumblingOverlay(stateExt.rootbeer_utils$blockEntity(), poseStack, flagModel, null, lightCoords, OverlayTexture.NO_OVERLAY, 0, breakProgress);
+        boolean managed2 = OverlayRenderer.manageCrumblingOverlay(stateExt.rootbeer_utils$blockEntity(), collector, poseStack, flagModel, null, lightCoords, OverlayTexture.NO_OVERLAY, 0, breakProgress);
         if (!managed2) {
             collector.submitModel(flagModel, phase, poseStack, lightCoords, OverlayTexture.NO_OVERLAY, -1, sprite, sprites, 0, breakProgress);
         }

@@ -21,7 +21,7 @@ public final class CapturedFrame {
 
     public static void captureLastFrame() {
         final Minecraft client = Minecraft.getInstance();
-        Screenshot.takeScreenshot(client.getMainRenderTarget(), nativeImage ->
+        Screenshot.takeScreenshot(client.gameRenderer.mainRenderTarget(), nativeImage ->
             client.getTextureManager().register(
                 CAPTURED_FRAME_ID,
                 new DynamicTexture(CAPTURED_FRAME_ID::toString, nativeImage)

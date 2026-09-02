@@ -58,6 +58,8 @@ public abstract class BBEAbstractSignRenderer<S extends SignRenderState> impleme
 
     protected abstract SpriteId getSignSprite(WoodType type);
 
+    protected abstract com.mojang.math.Transformation getBodyTransformation(S state);
+
     @Override
     public void submit(final S state, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final CameraRenderState cameraRenderState) {
         final BlockState bs = ((BlockEntityRenderStateAccessor)state).getBlockState();
@@ -67,12 +69,12 @@ public abstract class BBEAbstractSignRenderer<S extends SignRenderState> impleme
             Model.Simple bodyModel = this.getSignModel(state);
 
             poseStack.pushPose();
-            poseStack.mulPose(state.transformations.body());
+            poseStack.mulPose(this.getBodyTransformation(state));
             this.submitSign(poseStack, state.lightCoords, signBlock.type(), bodyModel, state.breakProgress, submitNodeCollector);
             poseStack.popPose();
         }
 
-        manageCrumblingOverlay(state, poseStack);
+        manageCrumblingOverlay(state, poseStack, submitNodeCollector);
         renderCulledText(state, cameraRenderState, bs, signBlock, poseStack, submitNodeCollector);
     }
 
@@ -82,7 +84,7 @@ public abstract class BBEAbstractSignRenderer<S extends SignRenderState> impleme
         submitNodeCollector.submitModel(signModel, Unit.INSTANCE, poseStack, lightCoords, OverlayTexture.NO_OVERLAY, -1, sprite, this.sprites, 0, breakProgress);
     }
 
-    private void manageCrumblingOverlay(S state, PoseStack poseStack) {
+    private void manageCrumblingOverlay(S state, PoseStack poseStack, SubmitNodeCollector collector) {
         if (state.breakProgress == null) {
             return;
         }
@@ -90,10 +92,10 @@ public abstract class BBEAbstractSignRenderer<S extends SignRenderState> impleme
         final Model.Simple model = this.getSignModel(state);
 
         poseStack.pushPose();
-        poseStack.mulPose(state.transformations.body());
+        poseStack.mulPose(this.getBodyTransformation(state));
 
         OverlayRenderer.submitCrumblingOverlay(
-                poseStack, model, Unit.INSTANCE,
+                collector, poseStack, model, Unit.INSTANCE,
                 state.lightCoords, OverlayTexture.NO_OVERLAY, -1,
                 state.breakProgress
         );
@@ -229,6 +231,5 @@ public abstract class BBEAbstractSignRenderer<S extends SignRenderState> impleme
         state.backText = blockEntity.getBackText();
         state.isTextFilteringEnabled = Minecraft.getInstance().isTextFilteringEnabled();
         state.drawOutline = isOutlineVisible(blockEntity.getBlockPos());
-        state.woodType = SignBlock.getWoodType(blockEntity.getBlockState().getBlock());
     }
 }

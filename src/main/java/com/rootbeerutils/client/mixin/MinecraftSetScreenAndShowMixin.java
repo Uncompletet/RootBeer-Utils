@@ -18,7 +18,7 @@ public abstract class MinecraftSetScreenAndShowMixin {
         )
     )
     private void rbutils$skipForcedFrame(Minecraft instance, boolean renderLevel, Operation<Void> original) {
-        if (instance.getOverlay() instanceof LoadingOverlay) {
+        if (instance.gui.overlay() instanceof LoadingOverlay) {
             return;
         }
 

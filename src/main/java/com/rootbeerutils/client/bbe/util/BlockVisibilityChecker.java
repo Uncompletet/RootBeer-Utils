@@ -28,7 +28,7 @@ public final class BlockVisibilityChecker {
     }
 
     public static Visibility isBlockInFOVAndVisible(Frustum frustum, BlockEntity blockEntity) {
-        Screen curScreen = Minecraft.getInstance().screen;
+        Screen curScreen = Minecraft.getInstance().gui.screen();
         if (curScreen != null && !(curScreen instanceof ChatScreen)) {
             return Visibility.OCCLUDED;
         }

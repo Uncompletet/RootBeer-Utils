@@ -35,6 +35,6 @@ public class QuickPackClient implements ClientModInitializer {
     }
 
     private static void announce(Minecraft client, Component message) {
-        client.gui.setOverlayMessage(message, false);
+        client.gui.hud.setOverlayMessage(message, false);
     }
 }

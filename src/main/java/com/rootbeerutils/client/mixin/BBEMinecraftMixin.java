@@ -33,7 +33,6 @@ public abstract class BBEMinecraftMixin {
 
     @Shadow @Final public Font font;
     @Shadow @Final private ModelManager modelManager;
-    @Shadow @Final private BlockModelResolver blockModelResolver;
     @Shadow @Final private ItemModelResolver itemModelResolver;
     @Shadow @Final private EntityRenderDispatcher entityRenderDispatcher;
     @Shadow @Final private AtlasManager atlasManager;
@@ -58,7 +57,7 @@ public abstract class BBEMinecraftMixin {
             BBE.GlobalScope.altRenderDispatcher = new AltRenderDispatcher(
                     this.font,
                     this.modelManager.entityModels(),
-                    this.blockModelResolver,
+                    new BlockModelResolver(this.modelManager),
                     this.itemModelResolver,
                     this.entityRenderDispatcher,
                     this.atlasManager,

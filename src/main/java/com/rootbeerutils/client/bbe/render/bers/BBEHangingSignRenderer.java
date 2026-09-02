@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.CeilingHangingSignBlock;
 import net.minecraft.world.level.block.HangingSignBlock;
+import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -120,7 +121,7 @@ public class BBEHangingSignRenderer extends BBEAbstractSignRenderer<HangingSignR
     }
 
     private static SignRenderState.SignTransformations createTransformations(final float angle) {
-        return new SignRenderState.SignTransformations(bodyTransformation(angle), textTransformation(angle, true), textTransformation(angle, false));
+        return new SignRenderState.SignTransformations(textTransformation(angle, true), textTransformation(angle, false));
     }
 
     private static SignRenderState.SignTransformations createGroundTransformation(final int segment) {
@@ -132,12 +133,23 @@ public class BBEHangingSignRenderer extends BBEAbstractSignRenderer<HangingSignR
     }
 
     protected Model.@NonNull Simple getSignModel(final HangingSignRenderState state) {
-        return this.signModels.get(state.woodType).get(state.attachmentType);
+        BlockState blockState = ((com.rootbeerutils.client.mixin.BlockEntityRenderStateAccessor) state).getBlockState();
+        return this.signModels.get(SignBlock.getWoodType(blockState.getBlock())).get(state.attachmentType);
+    }
+
+    @Override
+    protected Transformation getBodyTransformation(final HangingSignRenderState state) {
+        BlockState blockState = ((com.rootbeerutils.client.mixin.BlockEntityRenderStateAccessor) state).getBlockState();
+        float angle = blockState.getBlock() instanceof WallHangingSignBlock
+                ? blockState.getValue(WallHangingSignBlock.FACING).toYRot()
+                : RotationSegment.convertToDegrees(blockState.getValue(CeilingHangingSignBlock.ROTATION));
+        return bodyTransformation(angle);
     }
 
     @Override
     protected @NonNull SpriteId getSignSprite(final @NonNull WoodType type) {
-        return Sheets.getHangingSignSprite(type);
+        return Sheets.BLOCK_ENTITIES_MAPPER.apply(Identifier.withDefaultNamespace(
+                "signs/hanging/" + type.name().toLowerCase(java.util.Locale.ROOT)));
     }
 
     private record Models(Model.Simple ceiling, Model.Simple ceilingMiddle, Model.Simple wall) {

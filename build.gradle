@@ -67,8 +67,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    // Mod Menu API + Lombok for CustomClientBrand
-    implementation files("libs/modmenu-18.0.0.jar")
+    // Lombok for CustomClientBrand
     compileOnly "org.projectlombok:lombok:1.18.42"
     annotationProcessor "org.projectlombok:lombok:1.18.42"
 

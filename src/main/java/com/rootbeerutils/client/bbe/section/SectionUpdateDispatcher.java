@@ -7,11 +7,12 @@ import com.rootbeerutils.client.bbe.task.TaskScheduler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+/* sodium */
+import com.rootbeerutils.client.bbe.sodium.render.SodiumWorldRenderer;
 
 public final class SectionUpdateDispatcher {
 
@@ -23,13 +24,16 @@ public final class SectionUpdateDispatcher {
     public static void queueRebuildAtBlockPos(BlockPos pos) {
         try {
             TaskScheduler.schedule(() -> {
-                Level level = Minecraft.getInstance().level;
-                if (level == null) {
-                    return;
-                }
+                if (Minecraft.getInstance().level == null) return;
 
-                BlockState state = level.getBlockState(pos);
-                Minecraft.getInstance().levelRenderer.blockChanged(level, pos, state, state, 8);
+                SodiumWorldRenderer sodiumWorldRenderer = SodiumWorldRenderer.instanceNullable();
+                if (sodiumWorldRenderer != null) {
+                    sodiumWorldRenderer.scheduleRebuildForBlockArea(
+                            pos.getX(), pos.getY(), pos.getZ(),
+                            pos.getX(), pos.getY(), pos.getZ(),
+                            false
+                    );
+                }
             });
         } catch (Exception e) {
             LOGGER.error("Failed to rebuild terrain section!", e);
@@ -47,7 +51,10 @@ public final class SectionUpdateDispatcher {
 
     public static void queueUpdateAllSections() {
         try {
-            Minecraft.getInstance().levelRenderer.allChanged();
+            SodiumWorldRenderer sodiumWorldRenderer = SodiumWorldRenderer.instanceNullable();
+            if (sodiumWorldRenderer != null) {
+                sodiumWorldRenderer.scheduleTerrainUpdate();
+            }
         } catch (Exception e) {
             LOGGER.error("Reloading terrain sections failed!", e);
         }

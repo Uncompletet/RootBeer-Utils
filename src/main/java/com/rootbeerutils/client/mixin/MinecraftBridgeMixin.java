@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public abstract class MinecraftBridgeMixin {
 
-    @ModifyVariable(method = "setScreen", at = @At("HEAD"), argsOnly = true, name = "screen")
+    @ModifyVariable(method = "setScreenAndShow", at = @At("HEAD"), argsOnly = true, name = "screen")
     private Screen rbutils$swapReconfigScreen(Screen screen) {
         if (screen instanceof ServerReconfigScreen reconfig) {
             return new ReconfigBridgeScreen(((ServerReconfigScreenAccessor) reconfig).rbutils$getConnection());

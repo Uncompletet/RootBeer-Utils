@@ -10,11 +10,8 @@ import com.rootbeerutils.client.bbe.util.QuadTransform;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.block.HangingSignBlock;
-import net.minecraft.world.level.block.state.properties.WoodType;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,17 +51,10 @@ public final class GeometryRegistry {
         public static final ModelLayerLocation DECORATED_POT_BASE = ModelLayers.DECORATED_POT_BASE;
         public static final ModelLayerLocation DECORATED_POT_SIDES = ModelLayers.DECORATED_POT_SIDES;
         public static final ModelLayerLocation SHULKER = ModelLayers.SHULKER_BOX;
-        public static final ModelLayerLocation BED_HEAD = ModelLayers.BED_HEAD;
-        public static final ModelLayerLocation BED_FOOT = ModelLayers.BED_FOOT;
         public static final ModelLayerLocation STANDING_BANNER = ModelLayers.STANDING_BANNER;
         public static final ModelLayerLocation WALL_BANNER = ModelLayers.WALL_BANNER;
         public static final ModelLayerLocation STANDING_BANNER_FLAG = ModelLayers.STANDING_BANNER_FLAG;
         public static final ModelLayerLocation WALL_BANNER_FLAG = ModelLayers.WALL_BANNER_FLAG;
-        public static final ModelLayerLocation SIGN_WALL = ModelLayers.createWallSignModelName(WoodType.OAK);
-        public static final ModelLayerLocation SIGN_STANDING = ModelLayers.createStandingSignModelName(WoodType.OAK);
-        public static final ModelLayerLocation HANGING_SIGN_WALL = ModelLayers.createHangingSignModelName(WoodType.OAK, HangingSignBlock.Attachment.WALL);
-        public static final ModelLayerLocation HANGING_SIGN_CEILING = ModelLayers.createHangingSignModelName(WoodType.OAK, HangingSignBlock.Attachment.CEILING);
-        public static final ModelLayerLocation HANGING_SIGN_CEILING_MIDDLE = ModelLayers.createHangingSignModelName(WoodType.OAK, HangingSignBlock.Attachment.CEILING_MIDDLE);
         public static final ModelLayerLocation COPPER_GOLEM = ModelLayers.COPPER_GOLEM;
         public static final ModelLayerLocation COPPER_GOLEM_RUNNING = ModelLayers.COPPER_GOLEM_RUNNING;
         public static final ModelLayerLocation COPPER_GOLEM_SITTING = ModelLayers.COPPER_GOLEM_SITTING;
@@ -72,8 +62,7 @@ public final class GeometryRegistry {
 
         public static final ModelLayerLocation[] ALL = new ModelLayerLocation[] {
                 CHEST, LEFT_CHEST, RIGHT_CHEST, BELL_BODY, DECORATED_POT_BASE, DECORATED_POT_SIDES,
-                SHULKER, BED_HEAD, BED_FOOT, STANDING_BANNER, WALL_BANNER, STANDING_BANNER_FLAG, WALL_BANNER_FLAG,
-                SIGN_WALL, SIGN_STANDING, HANGING_SIGN_WALL, HANGING_SIGN_CEILING, HANGING_SIGN_CEILING_MIDDLE,
+                SHULKER, STANDING_BANNER, WALL_BANNER, STANDING_BANNER_FLAG, WALL_BANNER_FLAG,
                 COPPER_GOLEM, COPPER_GOLEM_RUNNING, COPPER_GOLEM_SITTING, COPPER_GOLEM_STAR
         };
     }
@@ -87,11 +76,7 @@ public final class GeometryRegistry {
         public static final Identifier DECORATED_POT_BASE = Identifier.withDefaultNamespace("entity/decorated_pot/decorated_pot_base");
         public static final Identifier DECORATED_POT_SIDES = Identifier.withDefaultNamespace("entity/decorated_pot/decorated_pot_side");
         public static final Identifier SHULKER = Identifier.withDefaultNamespace("entity/shulker/shulker");
-        public static final Identifier BED_HEAD = Identifier.withDefaultNamespace("entity/bed/bed_head");
-        public static final Identifier BED_FOOT = Identifier.withDefaultNamespace("entity/bed/bed_foot");
         public static final Identifier BANNER = Identifier.withDefaultNamespace("entity/banner_base");
-        public static final Identifier SIGN = Sheets.getSignSprite(WoodType.OAK).texture();
-        public static final Identifier HANGING_SIGN = Sheets.getHangingSignSprite(WoodType.OAK).texture();
         public static final Identifier COPPER_GOLEM_STATUE = Identifier.withDefaultNamespace("entity/copper_golem/copper_golem");
     }
 }
