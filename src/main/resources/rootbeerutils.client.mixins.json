@@ -49,6 +49,7 @@
     "MinecraftSetScreenAndShowMixin",
     "MinecraftSkipBootScreenMixin",
     "MipMapGeneratorAccessor",
+    "MixinCrosshairInGameHud",
     "ModelPartAccessor",
     "PackRepositoryAsyncMixin",
     "PackSelectionModelAsyncMixin",

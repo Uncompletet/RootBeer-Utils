@@ -21,7 +21,8 @@
       "com.rootbeerutils.client.shulkerbox.ShulkerBoxPreview",
       "com.rootbeerutils.client.quickpack.QuickPackClient",
       "com.rootbeerutils.client.bbe.BBEClient",
-      "com.rootbeerutils.client.clientcommands.ClientCommands"
+      "com.rootbeerutils.client.clientcommands.ClientCommands",
+      "com.rootbeerutils.client.crosshair.Crosshairindicator"
     ],
     "main": [
       "com.rootbeerutils.main.healthmod.HealthMod",
