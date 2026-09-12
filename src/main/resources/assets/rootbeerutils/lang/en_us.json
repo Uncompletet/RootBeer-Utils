@@ -2,6 +2,7 @@
   "key.rootbeerutils.zoom":                  "Zoom (hold)",
   "key.rootbeerutils.shulker_lock_tooltip":  "Shulker box: lock tooltip + hover items (hold)",
   "key.rootbeerutils.quickpack_toggle":      "QuickPack: toggle fast pack loading",
+  "key.rootbeerutils.ender_expand_tooltip":  "Ender Chest: Expand Tooltip",
   "rootbeerutils.quickpack.enabled":         "QuickPack enabled (next reload will be fast)",
   "rootbeerutils.quickpack.disabled":        "QuickPack disabled (next reload uses vanilla)",
   "rootbeerutils.quickpack.reload_time":     "%s — pack reload took %s ms",
