@@ -1,6 +1,7 @@
 package com.rootbeerutils.client.mixin;
 
 import com.rootbeerutils.client.shulkerbox.ShulkerBoxPreviewTooltipComponent;
+import com.rootbeerutils.client.shulkerbox.ShulkerBoxPreview;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -9,6 +10,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -29,6 +31,13 @@ public class ItemStackShulkerPreviewMixin {
 
     @Inject(method = "getTooltipImage()Ljava/util/Optional;", at = @At("HEAD"), cancellable = true)
     private void rbutils$shulkerBoxPreview(CallbackInfoReturnable<Optional<TooltipComponent>> cir) {
+        ItemStack stack = (ItemStack) (Object) this;
+        if (stack.getItem() == Items.ENDER_CHEST && ShulkerBoxPreview.echestWasOpened) {
+            cir.setReturnValue(Optional.of(
+                    new ShulkerBoxPreviewTooltipComponent(ShulkerBoxPreview.enderChestItems)));
+            return;
+        }
+
         ItemContainerContents container = rbutils$shulkerContainer((ItemStack) (Object) this);
         if (container == null) {
             return;

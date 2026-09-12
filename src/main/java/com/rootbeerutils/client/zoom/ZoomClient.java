@@ -26,7 +26,7 @@ public class ZoomClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         zoomKey = KeyMappingHelper.registerKeyMapping(
-            new KeyMapping("key.rootbeerutils.zoom", GLFW.GLFW_KEY_C, KeyMapping.Category.MISC));
+            new KeyMapping("key.rootbeerutils.zoom", GLFW.GLFW_KEY_UNKNOWN, KeyMapping.Category.MISC));
     }
 
     public static boolean isZoomActive() {
