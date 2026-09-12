@@ -21,7 +21,7 @@ public class HideLogoRendererMixin {
     )
     private void rbutils$gateLogo(CallbackInfo ci) {
         Minecraft mc = Minecraft.getInstance();
-        if (!(mc.screen instanceof TitleScreen) || mc.getOverlay() != null) {
+        if (!(mc.gui.screen() instanceof TitleScreen) || mc.gui.overlay() != null) {
             ci.cancel();
         }
     }

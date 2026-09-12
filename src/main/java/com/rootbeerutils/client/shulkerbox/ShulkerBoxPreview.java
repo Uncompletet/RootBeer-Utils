@@ -7,18 +7,31 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallback;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShulkerBoxPreview implements ClientModInitializer {
 
     private static KeyMapping lockKey;
+    private static KeyMapping expandKey;
+    public static boolean echestWasOpened = false;
+    public static List<ItemStack> enderChestItems = new ArrayList<>();
+    public static Minecraft mc = Minecraft.getInstance();
 
     @Override
     public void onInitializeClient() {
         lockKey = new KeyMapping("key.rootbeerutils.shulker_lock_tooltip",
-                                 GLFW.GLFW_KEY_LEFT_CONTROL,
-                                 KeyMapping.Category.MISC);
+                GLFW.GLFW_KEY_LEFT_CONTROL,
+                KeyMapping.Category.MISC);
         KeyMappingHelper.registerKeyMapping(lockKey);
+
+        expandKey = new KeyMapping("key.rootbeerutils.ender_expand_tooltip",
+                GLFW.GLFW_KEY_LEFT_ALT,
+                KeyMapping.Category.MISC);
+        KeyMappingHelper.registerKeyMapping(expandKey);
 
         ClientTooltipComponentCallback.EVENT.register(data -> {
             if (data instanceof ShulkerBoxPreviewTooltipComponent component) {
@@ -40,7 +53,22 @@ public class ShulkerBoxPreview implements ClientModInitializer {
 
         InputConstants.Key key = ((KeyMappingAccessor) lockKey).rbutils$getBoundKey();
         if (key.getType() != InputConstants.Type.KEYSYM
-            || key.getValue() == InputConstants.UNKNOWN.getValue()) {
+                || key.getValue() == InputConstants.UNKNOWN.getValue()) {
+            return false;
+        }
+
+        long handle = Minecraft.getInstance().getWindow().handle();
+        return GLFW.glfwGetKey(handle, key.getValue()) == GLFW.GLFW_PRESS;
+    }
+
+    public static boolean isExpandKeyPressed() {
+        if (expandKey == null) {
+            return false;
+        }
+
+        InputConstants.Key key = ((KeyMappingAccessor) expandKey).rbutils$getBoundKey();
+        if (key.getType() != InputConstants.Type.KEYSYM
+                || key.getValue() == InputConstants.UNKNOWN.getValue()) {
             return false;
         }
 
@@ -48,3 +76,5 @@ public class ShulkerBoxPreview implements ClientModInitializer {
         return GLFW.glfwGetKey(handle, key.getValue()) == GLFW.GLFW_PRESS;
     }
 }
+
+

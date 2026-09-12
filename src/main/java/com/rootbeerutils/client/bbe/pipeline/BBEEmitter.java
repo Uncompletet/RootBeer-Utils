@@ -45,17 +45,12 @@ import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CeilingHangingSignBlock;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.CopperGolemStatueBlock;
 import net.minecraft.world.level.block.DecoratedPotBlock;
 import net.minecraft.world.level.block.EnderChestBlock;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
-import net.minecraft.world.level.block.SignBlock;
-import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.WallBannerBlock;
-import net.minecraft.world.level.block.WallHangingSignBlock;
-import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -134,24 +129,6 @@ public final class BBEEmitter {
             if (ConfigCache.optimizeShulker) {
                 emitShulker(cullTest, random, state, helper, blockEntity);
             }
-        } else if (block instanceof CeilingHangingSignBlock || block instanceof WallHangingSignBlock) {
-            blockEntity = tryGetBlockEntity(pos, level);
-            if (blockEntity == null) {
-                return;
-            }
-
-            if (ConfigCache.optimizeSigns) {
-                emitHangingSign(cullTest, random, state, helper);
-            }
-        } else if (block instanceof WallSignBlock || block instanceof StandingSignBlock) {
-            blockEntity = tryGetBlockEntity(pos, level);
-            if (blockEntity == null) {
-                return;
-            }
-
-            if (ConfigCache.optimizeSigns) {
-                emitSign(cullTest, random, state, helper);
-            }
         } else if (block instanceof BellBlock) {
             blockEntity = tryGetBlockEntity(pos, level);
             if (blockEntity == null) {
@@ -174,10 +151,6 @@ public final class BBEEmitter {
             blockEntity = tryGetBlockEntity(pos, level);
             if (blockEntity == null) {
                 return;
-            }
-
-            if (ConfigCache.optimizeBeds) {
-                emitBed(cullTest, random, state, helper);
             }
         } else if (block instanceof BannerBlock || block instanceof WallBannerBlock) {
             blockEntity = tryGetBlockEntity(pos, level);
@@ -282,80 +255,6 @@ public final class BBEEmitter {
         helper.setRotation(null);
     }
 
-    private static void emitSign(Predicate<@Nullable Direction> cullTest, RandomSource random,
-                                 BlockState state, BlockRenderHelper helper) {
-        boolean isWallSign = !state.hasProperty(BlockStateProperties.ROTATION_16);
-        ModelLayerLocation layer = isWallSign
-                ? GeometryRegistry.SupportedVanillaModelLayers.SIGN_WALL
-                : GeometryRegistry.SupportedVanillaModelLayers.SIGN_STANDING;
-
-        Map<String, BlockStateModel> pairs = getPairs(layer);
-        if (pairs.isEmpty()) {
-            return;
-        }
-
-        ArrayList<BlockStateModelPart> merged = partsBuf();
-        addAllParts(merged, pairs.values(), random);
-        if (merged.isEmpty()) {
-            return;
-        }
-
-        var woodType = ((SignBlock) state.getBlock()).type();
-        SpriteId signMaterial = Sheets.getSignSprite(woodType);
-
-        helper.setSourceSprite(QuadTransform.getSprite(GeometryRegistry.PlaceHolderSpriteIdentifiers.SIGN));
-        helper.setMaterial(signMaterial);
-        helper.setRendertype(ChunkSectionLayer.SOLID);
-        helper.emitParts(merged, state, cullTest);
-    }
-
-    private static void emitHangingSign(Predicate<@Nullable Direction> cullTest, RandomSource random,
-                                        BlockState state, BlockRenderHelper helper) {
-        boolean isWall = !state.hasProperty(CeilingHangingSignBlock.ATTACHED);
-        boolean attached = !isWall && state.getValue(CeilingHangingSignBlock.ATTACHED);
-
-        ModelLayerLocation layer = isWall
-                ? GeometryRegistry.SupportedVanillaModelLayers.HANGING_SIGN_WALL
-                : (attached
-                        ? GeometryRegistry.SupportedVanillaModelLayers.HANGING_SIGN_CEILING_MIDDLE
-                        : GeometryRegistry.SupportedVanillaModelLayers.HANGING_SIGN_CEILING);
-
-        Map<String, BlockStateModel> pairs = getPairs(layer);
-        if (pairs.isEmpty()) {
-            return;
-        }
-
-        var woodType = ((SignBlock) state.getBlock()).type();
-        SpriteId signMaterial = Sheets.getHangingSignSprite(woodType);
-
-        ArrayList<BlockStateModelPart> merged = partsBuf();
-        addAllParts(merged, pairs.values(), random);
-
-        BlockStateModel chains = pairs.get(attached ? "vChains" : "normalChains");
-        if (chains != null) {
-            List<BlockStateModelPart> chainParts = new ArrayList<>();
-            chains.collectParts(random, chainParts);
-            if (!chainParts.isEmpty()) {
-                float[] rotation = {0f, (BlockRenderHelper.getRotationFromBlockState(state) + 180f) % 360f};
-                helper.setSourceSprite(QuadTransform.getSprite(GeometryRegistry.PlaceHolderSpriteIdentifiers.HANGING_SIGN));
-                helper.setRotation(rotation);
-                helper.setMaterial(signMaterial);
-                helper.setRendertype(ChunkSectionLayer.CUTOUT);
-                helper.emitParts(chainParts, state, cullTest);
-                helper.setRotation(null);
-            }
-        }
-
-        if (merged.isEmpty()) {
-            return;
-        }
-
-        helper.setSourceSprite(QuadTransform.getSprite(GeometryRegistry.PlaceHolderSpriteIdentifiers.HANGING_SIGN));
-        helper.setMaterial(signMaterial);
-        helper.setRendertype(ChunkSectionLayer.CUTOUT);
-        helper.emitParts(merged, state, cullTest);
-    }
-
     private static void emitBell(Predicate<@Nullable Direction> cullTest, RandomSource random,
                                  BlockState state, BlockRenderHelper helper, BlockEntity blockEntity) {
         if (!shouldRenderLid(blockEntity)) {
@@ -384,33 +283,6 @@ public final class BBEEmitter {
         helper.setMaterial(bellBodyMaterial);
         helper.setRendertype(ChunkSectionLayer.SOLID);
         helper.emitParts(bellBodyParts, state, cullTest);
-    }
-
-    private static void emitBed(Predicate<@Nullable Direction> cullTest, RandomSource random,
-                                BlockState state, BlockRenderHelper helper) {
-        ModelLayerLocation layer = (state.getValue(BedBlock.PART) == BedPart.HEAD) ? ModelLayers.BED_HEAD : ModelLayers.BED_FOOT;
-
-        Map<String, BlockStateModel> pairs = getPairs(layer);
-        if (pairs.isEmpty()) {
-            return;
-        }
-
-        ArrayList<BlockStateModelPart> merged = partsBuf();
-        addAllParts(merged, pairs.values(), random);
-        if (merged.isEmpty()) {
-            return;
-        }
-
-        DyeColor color = ((BedBlock) state.getBlock()).getColor();
-        SpriteId bedMaterial = Sheets.getBedSprite(color);
-
-        helper.setSourceSprite(QuadTransform.getSprite(
-                layer == ModelLayers.BED_HEAD
-                        ? GeometryRegistry.PlaceHolderSpriteIdentifiers.BED_HEAD
-                        : GeometryRegistry.PlaceHolderSpriteIdentifiers.BED_FOOT));
-        helper.setMaterial(bedMaterial);
-        helper.setRendertype(ChunkSectionLayer.SOLID);
-        helper.emitParts(merged, state, cullTest);
     }
 
     private static void emitDecoratedPot(Predicate<@Nullable Direction> cullTest, RandomSource random,
@@ -453,11 +325,11 @@ public final class BBEEmitter {
             }
 
             SpriteId sideMaterial = switch (key) {
-                case "back"  -> MaterialSelector.getDPSideMaterial(decorations.back().orElse(null));
-                case "front" -> MaterialSelector.getDPSideMaterial(decorations.front().orElse(null));
-                case "left"  -> MaterialSelector.getDPSideMaterial(decorations.left().orElse(null));
-                case "right" -> MaterialSelector.getDPSideMaterial(decorations.right().orElse(null));
-                default      -> MaterialSelector.getDPSideMaterial(null);
+                case "back"  -> MaterialSelector.getDPSideMaterial(decorations.back());
+                case "front" -> MaterialSelector.getDPSideMaterial(decorations.front());
+                case "left"  -> MaterialSelector.getDPSideMaterial(decorations.left());
+                case "right" -> MaterialSelector.getDPSideMaterial(decorations.right());
+                default      -> MaterialSelector.getDPSideMaterial(java.util.Optional.empty());
             };
 
             helper.setSourceSprite(QuadTransform.getSprite(GeometryRegistry.PlaceHolderSpriteIdentifiers.DECORATED_POT_SIDES));

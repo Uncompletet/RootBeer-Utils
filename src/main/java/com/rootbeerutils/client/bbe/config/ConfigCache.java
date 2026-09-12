@@ -21,7 +21,6 @@ public final class ConfigCache {
     public static volatile boolean optimizeShulker;
     public static volatile boolean optimizeSigns;
     public static volatile boolean optimizeBells;
-    public static volatile boolean optimizeBeds;
     public static volatile boolean optimizeBanners;
     public static volatile boolean optimizeDecoratedPots;
     public static volatile boolean optimizeCopperGolemStatue;
@@ -58,7 +57,6 @@ public final class ConfigCache {
         optimizeShulker = opt.optimizeShulkerBoxes;
         optimizeSigns = opt.optimizeSigns;
         optimizeBells = opt.optimizeBells;
-        optimizeBeds = opt.optimizeBeds;
         optimizeBanners = opt.optimizeBanners;
         optimizeDecoratedPots = opt.optimizeDecoratedPots;
         optimizeCopperGolemStatue = opt.optimizeCopperGolemStatues;
@@ -83,7 +81,6 @@ public final class ConfigCache {
         Arrays.fill(ENABLED, false);
         ENABLED[com.rootbeerutils.client.bbe.manager.InstancedBlockEntityManager.OptKind.CHEST  & 0xFF] = optimizeChests;
         ENABLED[com.rootbeerutils.client.bbe.manager.InstancedBlockEntityManager.OptKind.SIGN   & 0xFF] = optimizeSigns;
-        ENABLED[com.rootbeerutils.client.bbe.manager.InstancedBlockEntityManager.OptKind.BED    & 0xFF] = optimizeBeds;
         ENABLED[com.rootbeerutils.client.bbe.manager.InstancedBlockEntityManager.OptKind.SHULKER& 0xFF] = optimizeShulker;
         ENABLED[com.rootbeerutils.client.bbe.manager.InstancedBlockEntityManager.OptKind.POT    & 0xFF] = optimizeDecoratedPots;
         ENABLED[com.rootbeerutils.client.bbe.manager.InstancedBlockEntityManager.OptKind.BANNER & 0xFF] = optimizeBanners;

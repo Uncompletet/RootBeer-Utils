@@ -4,19 +4,19 @@
 package com.rootbeerutils.client.bbe.api;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 
 public enum SupportedBlockEntityTypes {
-    CHEST(BlockEntityType.CHEST),
-    ENDER_CHEST(BlockEntityType.ENDER_CHEST),
-    TRAPPED_CHEST(BlockEntityType.TRAPPED_CHEST),
-    SIGN(BlockEntityType.SIGN),
-    HANGING_SIGN(BlockEntityType.HANGING_SIGN),
-    SHULKER_BOX(BlockEntityType.SHULKER_BOX),
-    DECORATED_POT(BlockEntityType.DECORATED_POT),
-    BANNER(BlockEntityType.BANNER),
-    BELL(BlockEntityType.BELL),
-    BED(BlockEntityType.BED),
-    COPPER_GOLEM_STATUE(BlockEntityType.COPPER_GOLEM_STATUE);
+    CHEST(BlockEntityTypes.CHEST),
+    ENDER_CHEST(BlockEntityTypes.ENDER_CHEST),
+    TRAPPED_CHEST(BlockEntityTypes.TRAPPED_CHEST),
+    SIGN(BlockEntityTypes.SIGN),
+    HANGING_SIGN(BlockEntityTypes.HANGING_SIGN),
+    SHULKER_BOX(BlockEntityTypes.SHULKER_BOX),
+    DECORATED_POT(BlockEntityTypes.DECORATED_POT),
+    BANNER(BlockEntityTypes.BANNER),
+    BELL(BlockEntityTypes.BELL),
+    COPPER_GOLEM_STATUE(BlockEntityTypes.COPPER_GOLEM_STATUE);
 
     private final BlockEntityType<?> blockEntityType;
 

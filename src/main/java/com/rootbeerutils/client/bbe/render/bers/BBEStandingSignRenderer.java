@@ -15,6 +15,7 @@ import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.PlainSignBlock;
+import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -73,12 +74,23 @@ public class BBEStandingSignRenderer extends BBEAbstractSignRenderer<StandingSig
     }
 
     protected Model.@NonNull Simple getSignModel(final StandingSignRenderState state) {
-        return this.signModels.get(state.woodType).get(state.attachmentType);
+        BlockState blockState = ((com.rootbeerutils.client.mixin.BlockEntityRenderStateAccessor) state).getBlockState();
+        return this.signModels.get(SignBlock.getWoodType(blockState.getBlock())).get(state.attachmentType);
+    }
+
+    @Override
+    protected Transformation getBodyTransformation(final StandingSignRenderState state) {
+        BlockState blockState = ((com.rootbeerutils.client.mixin.BlockEntityRenderStateAccessor) state).getBlockState();
+        float angle = blockState.getBlock() instanceof WallSignBlock
+                ? blockState.getValue(WallSignBlock.FACING).toYRot()
+                : RotationSegment.convertToDegrees(blockState.getValue(StandingSignBlock.ROTATION));
+        return bodyTransformation(state.attachmentType, angle);
     }
 
     @Override
     protected @NonNull SpriteId getSignSprite(final @NonNull WoodType type) {
-        return Sheets.getSignSprite(type);
+        return Sheets.BLOCK_ENTITIES_MAPPER.apply(Identifier.withDefaultNamespace(
+                "signs/" + type.name().toLowerCase(java.util.Locale.ROOT)));
     }
 
     private static Matrix4f baseTransformation(final float angle, final PlainSignBlock.Attachment attachmentType) {
@@ -104,9 +116,7 @@ public class BBEStandingSignRenderer extends BBEAbstractSignRenderer<StandingSig
     }
 
     private static SignRenderState.SignTransformations createTransformations(final PlainSignBlock.Attachment attachmentType, final float angle) {
-        return new SignRenderState.SignTransformations(
-                bodyTransformation(attachmentType, angle), textTransformation(attachmentType, angle, true), textTransformation(attachmentType, angle, false)
-        );
+        return new SignRenderState.SignTransformations(textTransformation(attachmentType, angle, true), textTransformation(attachmentType, angle, false));
     }
 
     private static SignRenderState.SignTransformations createGroundTransformation(final int segment) {

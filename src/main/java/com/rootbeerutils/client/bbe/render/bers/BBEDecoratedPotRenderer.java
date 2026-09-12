@@ -67,7 +67,7 @@ public class BBEDecoratedPotRenderer implements BlockEntityRenderer<DecoratedPot
     }
 
     private static SpriteId getSideSprite(final @Nullable Item item) {
-        return MaterialSelector.getDPSideMaterial(item);
+        return MaterialSelector.getDPSideMaterial(java.util.Optional.ofNullable(item));
     }
 
     @Override
@@ -130,64 +130,26 @@ public class BBEDecoratedPotRenderer implements BlockEntityRenderer<DecoratedPot
                        final int outlineColor) {
         RenderType renderType = Sheets.DECORATED_POT_BASE.renderType(RenderTypes::entitySolid);
         TextureAtlasSprite sprite = this.sprites.get(Sheets.DECORATED_POT_BASE);
-        submitNodeCollector.submitModelPart(this.neck, poseStack, renderType, lightCoords, overlayCoords, sprite, false, false, -1, null, outlineColor);
-        submitNodeCollector.submitModelPart(this.top, poseStack, renderType, lightCoords, overlayCoords, sprite, false, false, -1, null, outlineColor);
-        submitNodeCollector.submitModelPart(this.bottom, poseStack, renderType, lightCoords, overlayCoords, sprite, false, false, -1, null, outlineColor);
+        submitPart(submitNodeCollector, this.neck, poseStack, renderType, lightCoords, overlayCoords, sprite, outlineColor);
+        submitPart(submitNodeCollector, this.top, poseStack, renderType, lightCoords, overlayCoords, sprite, outlineColor);
+        submitPart(submitNodeCollector, this.bottom, poseStack, renderType, lightCoords, overlayCoords, sprite, outlineColor);
         SpriteId frontSprite = getSideSprite(decorations.front().orElse(null));
-        submitNodeCollector.submitModelPart(
-                this.frontSide,
-                poseStack,
-                frontSprite.renderType(RenderTypes::entitySolid),
-                lightCoords,
-                overlayCoords,
-                this.sprites.get(frontSprite),
-                false,
-                false,
-                -1,
-                null,
-                outlineColor
-        );
+        submitPart(submitNodeCollector, this.frontSide, poseStack, frontSprite.renderType(RenderTypes::entitySolid),
+                lightCoords, overlayCoords, this.sprites.get(frontSprite), outlineColor);
         SpriteId backSprite = getSideSprite(decorations.back().orElse(null));
-        submitNodeCollector.submitModelPart(
-                this.backSide,
-                poseStack,
-                backSprite.renderType(RenderTypes::entitySolid),
-                lightCoords,
-                overlayCoords,
-                this.sprites.get(backSprite),
-                false,
-                false,
-                -1,
-                null,
-                outlineColor
-        );
+        submitPart(submitNodeCollector, this.backSide, poseStack, backSprite.renderType(RenderTypes::entitySolid),
+                lightCoords, overlayCoords, this.sprites.get(backSprite), outlineColor);
         SpriteId leftSprite = getSideSprite(decorations.left().orElse(null));
-        submitNodeCollector.submitModelPart(
-                this.leftSide,
-                poseStack,
-                leftSprite.renderType(RenderTypes::entitySolid),
-                lightCoords,
-                overlayCoords,
-                this.sprites.get(leftSprite),
-                false,
-                false,
-                -1,
-                null,
-                outlineColor
-        );
+        submitPart(submitNodeCollector, this.leftSide, poseStack, leftSprite.renderType(RenderTypes::entitySolid),
+                lightCoords, overlayCoords, this.sprites.get(leftSprite), outlineColor);
         SpriteId rightSprite = getSideSprite(decorations.right().orElse(null));
-        submitNodeCollector.submitModelPart(
-                this.rightSide,
-                poseStack,
-                rightSprite.renderType(RenderTypes::entitySolid),
-                lightCoords,
-                overlayCoords,
-                this.sprites.get(rightSprite),
-                false,
-                false,
-                -1,
-                null,
-                outlineColor
-        );
+        submitPart(submitNodeCollector, this.rightSide, poseStack, rightSprite.renderType(RenderTypes::entitySolid),
+                lightCoords, overlayCoords, this.sprites.get(rightSprite), outlineColor);
+    }
+
+    private static void submitPart(final SubmitNodeCollector collector, final ModelPart part, final PoseStack poseStack,
+                                   final RenderType renderType, final int lightCoords, final int overlayCoords,
+                                   final TextureAtlasSprite sprite, final int outlineColor) {
+        collector.submitModelPart(part, poseStack, renderType, lightCoords, overlayCoords, sprite, -1, null, outlineColor);
     }
 }

@@ -89,7 +89,6 @@ public class BBEGameOptions {
         public boolean optimizeShulkerBoxes = true;
         public boolean optimizeSigns = true;
         public boolean optimizeBells = true;
-        public boolean optimizeBeds = true;
         public boolean optimizeBanners = true;
         public boolean optimizeDecoratedPots = true;
         public boolean optimizeCopperGolemStatues = true;

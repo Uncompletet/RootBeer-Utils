@@ -21,13 +21,13 @@ public class HideReloadOverlayMixin {
     private void rbutils$skipReloadRender(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
                                           float partialTick, CallbackInfo ci) {
         if (this.minecraft.level == null
-            && this.minecraft.screen != null
+            && this.minecraft.gui.screen() != null
             && this.minecraft.isGameLoadFinished()) {
-            this.minecraft.screen.extractRenderStateWithTooltipAndSubtitles(graphics, mouseX, mouseY, partialTick);
+            this.minecraft.gui.screen().extractRenderStateWithTooltipAndSubtitles(graphics, mouseX, mouseY, partialTick);
         }
 
         if (this.fadeOutStart != -1L) {
-            this.minecraft.setOverlay(null);
+            this.minecraft.gui.setOverlay(null);
         }
 
         ci.cancel();

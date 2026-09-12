@@ -3,7 +3,7 @@
  *
  * Hook into VulkanMod's per-block chunk-mesh emission. Fires at the start of {@code renderBlock}
  * BEFORE VulkanMod runs the vanilla {@code BlockStateModel.emitQuads}. We dispatch to BBEEmitter
- * which emits substitution geometry (chest/sign/banner/...) into the same {@code QuadEmitter}. The
+ * which emits substitution geometry (chest/banner/...) into the same {@code QuadEmitter}. The
  * original method continues afterward and emits the vanilla model (typically empty for these
  * blocks), so VulkanMod never sees an inconsistent emit state.
  *
