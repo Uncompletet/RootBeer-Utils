@@ -33,6 +33,10 @@
     {
       "config": "rootbeerutils.client.mixins.json",
       "environment": "*"
+    },
+    {
+      "config": "rootbeerutils.mixins.json",
+      "environment": "*"
     }
   ],
   "depends": {
